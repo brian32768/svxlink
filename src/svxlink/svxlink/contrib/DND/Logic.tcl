@@ -43,9 +43,6 @@ variable long_announce_file     \
   [getConfigValue ${::logic_name} LONG_ANNOUNCE_FILE ""]
 
 # "Do not disturb" settings
-#   Assumption is that you want to sleep at night so
-#   the "start" time will be from start time to midnight (example: 2200) and 
-#   the "end" time will be midnight to end time (example: 0900).
 variable dnd_start [getConfigValue ${::logic_name} DND_START_TIME -1]
 variable dnd_end   [getConfigValue ${::logic_name} DND_END_TIME -1]
 
@@ -654,7 +651,7 @@ proc checkPeriodicIdentify {} {
            (($hour * 60 + $minute) % $long_ident_interval == 0)}]
 
   if {$long_ident_now} {
-    if [dnd $dnd_start $dnd_end] {
+    if {[dnd $dnd_start $dnd_end]} {
       printInfo "Skipping long ident; do not disturb!"
     } else {
       send_long_ident $hour $minute
@@ -668,7 +665,7 @@ proc checkPeriodicIdentify {} {
     if {$ident_only_after_tx && !$need_ident} {
       return
     }
-    if [dnd $dnd_start $dnd_end] {
+    if {[dnd $dnd_start $dnd_end]} {
       printInfo "Skipping short ident; do not disturb!"
       return
     }
